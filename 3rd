@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>KVJ Cold Press Oils | Official Store</title>
+  <style>
+    body { margin: 0; font-family: 'Georgia', serif; background: #faf7f2; color: #2c2c2c; line-height: 1.6; }
+    header { background: linear-gradient(135deg, #2f5d3a, #1e3d2b); color: #fff; text-align: center; padding: 40px 20px; }
+    .container { max-width: 1000px; margin: auto; padding: 20px; }
+    h2 { text-align: center; color: #2f5d3a; margin-top: 40px; }
+    
+    /* Product Grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .card { background: #fff; border-radius: 15px; padding: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); text-align: center; transition: 0.3s; }
+    .card:hover { transform: translateY(-5px); }
+    .price { font-size: 22px; font-weight: bold; color: #b8860b; margin: 10px 0; }
+    .old-price { text-decoration: line-through; color: #888; font-size: 16px; }
+    
+    /* Buttons */
+    .btn { padding: 12px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 10px; font-size: 15px; }
+    .add-btn { background: #2f5d3a; color: white; }
+    .wish-btn { background: #fff; color: #e67e22; border: 1px solid #e67e22; display: none; }
+    
+    /* Cart & Checkout Form */
+    #checkout-area { background: #fff; padding: 30px; border-radius: 15px; margin-top: 50px; border: 2px solid #2f5d3a; }
+    .cart-item { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #eee; }
+    input, textarea { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 16px; }
+    .confirm-btn { background: #25D366; color: white; font-size: 18px; margin-top: 20px; }
+    
+    .total-row { font-size: 20px; font-weight: bold; margin-top: 20px; text-align: right; color: #2f5d3a; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>KVJ Cold Press Oils</h1>
+  <p>Pure • Traditional • Wood Pressed</p>
+</header>
+
+<div class="container">
+  <h2>🍃 Our Fresh Oils</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Coconut Oil (1L)</h3>
+      <p class="price">₹950</p>
+      <button class="btn add-btn" onclick="addToCart('Coconut Oil 1L', 950, 'coconut')">Add to Cart</button>
+      <button class="btn wish-btn" id="wish-coconut" onclick="alert('Added to Wishlist!')">❤ Add to Wishlist</button>
+    </div>
+
+    <div class="card">
+      <h3>Groundnut Oil (1L)</h3>
+      <p class="price">₹550</p>
+      <button class="btn add-btn" onclick="addToCart('Groundnut Oil 1L', 550, 'groundnut')">Add to Cart</button>
+      <button class="btn wish-btn" id="wish-groundnut" onclick="alert('Added to Wishlist!')">❤ Add to Wishlist</button>
+    </div>
+
+    <div class="card">
+      <h3>Family Pack (3L)</h3>
+      <p class="old-price">Regular: ₹1650</p>
+      <p class="price">₹1550 <small>(₹100 Off)</small></p>
+      <button class="btn add-btn" onclick="addToCart('Family Pack 3L', 1550, 'family3l')">Add to Cart</button>
+      <button class="btn wish-btn" id="wish-family3l" onclick="alert('Added to Wishlist!')">❤ Add to Wishlist</button>
+    </div>
+
+    <div class="card">
+      <h3>Bulk Pack (5L)</h3>
+      <p class="old-price">Regular: ₹2750</p>
+      <p class="price">₹2600 <small>(₹150 Off)</small></p>
+      <button class="btn add-btn" onclick="addToCart('Bulk Pack 5L', 2600, 'bulk5l')">Add to Cart</button>
+      <button class="btn wish-btn" id="wish-bulk5l" onclick="alert('Added to Wishlist!')">❤ Add to Wishlist</button>
+    </div>
+  </div>
+
+  <div id="checkout-area" style="display:none;">
+    <h2>🛒 Complete Your Order</h2>
+    <div id="cart-items-list"></div>
+    <div class="total-row" id="grand-total"></div>
+
+    <div id="customer-form" style="margin-top:30px;">
+      <h3>🚚 Delivery Details</h3>
+      <input type="text" id="name" placeholder="Full Name" required>
+      <textarea id="address" rows="3" placeholder="Complete Address with Pincode" required></textarea>
+      <button class="btn confirm-btn" onclick="generateWhatsAppOrder()">Confirm Order & Pay via WhatsApp</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let cart = [];
+  let totalAmount = 0;
+
+  function addToCart(productName, price, id) {
+    // 1. Add item to cart array
+    cart.push({ name: productName, price: price });
+    totalAmount += price;
+
+    // 2. Show the wishlist option for this specific item
+    document.getElementById('wish-' + id).style.display = 'block';
+
+    // 3. Update the UI
+    updateCartUI();
+    
+    // 4. Scroll to checkout section
+    document.getElementById('checkout-area').style.display = 'block';
+  }
+
+  function updateCartUI() {
+    const listContainer = document.getElementById('cart-items-list');
+    const totalDisplay = document.getElementById('grand-total');
+
+    listContainer.innerHTML = cart.map((item, index) => `
+      <div class="cart-item">
+        <span>${index + 1}. ${item.name}</span>
+        <span>₹${item.price}</span>
+      </div>
+    `).join('');
+
+    totalDisplay.innerHTML = `Grand Total: ₹${totalAmount}`;
+  }
+
+  function generateWhatsAppOrder() {
+    const custName = document.getElementById('name').value;
+    const custAddress = document.getElementById('address').value;
+
+    if (!custName || !custAddress) {
+      alert("Please provide your name and address for delivery.");
+      return;
+    }
+
+    // Build the structured list for the seller
+    let msg = `*KVJ OILS - NEW ORDER*%0a`;
+    msg += `--------------------------%0a`;
+    msg += `*CUSTOMER DETAILS*%0a`;
+    msg += `Name: ${custName}%0a`;
+    msg += `Address: ${custAddress}%0a`;
+    msg += `--------------------------%0a`;
+    msg += `*ORDERED ITEMS*%0a`;
+    
+    cart.forEach((item, i) => {
+      msg += `${i + 1}. ${item.name} - ₹${item.price}%0a`;
+    });
+
+    msg += `--------------------------%0a`;
+    msg += `*TOTAL BILL: ₹${totalAmount}*%0a`;
+    msg += `--------------------------%0a`;
+    msg += `Please confirm my order and share payment link.`;
+
+    // WhatsApp Redirect
+    const whatsappLink = `https://wa.me/919392331316?text=${msg}`;
+    window.open(whatsappLink, '_blank');
+  }
+</script>
+
+</body>
+</html>
